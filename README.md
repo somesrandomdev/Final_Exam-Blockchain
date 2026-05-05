@@ -1,70 +1,120 @@
-# Getting Started with Create React App
+# ChainRPS Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ChainRPS is a React frontend for a Sepolia Rock Paper Scissors smart contract. The app uses a commit-reveal flow so players choose a move privately, join with matching bets, then reveal the original move and secret to resolve the game on-chain.
 
-## Available Scripts
+## Contract
 
-In the project directory, you can run:
+- Network: Sepolia
+- Contract address: `0x83D917b606fE4C89ff178A5fd9d7D05Ca8605f38`
+- Wallet: MetaMask
+- Web3 library: `ethers@6`
 
-### `npm start`
+The ABI used by the frontend is defined directly in [src/App.js](src/App.js).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## What We Built
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React app created with Create React App
+- Dark ChainRPS UI with indigo and teal accents
+- MetaMask connection and Sepolia switching
+- Game creation with ETH bet
+- Game joining with matching bet
+- Commit hash generation through the contract, with a local ethers fallback
+- Move reveal flow for both players
+- Pot display, phase tracker, player status, win streak, recent games, and timeout buttons
+- Saved game ID after refresh
+- Saved move and secret per wallet/game so a player can return and reveal
+- `Load Game` button for resuming a game instead of trying to join it again
+- `Logout` button that clears the local wallet session while keeping the saved game ID
 
-### `npm test`
+## Project Files
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [src/App.js](src/App.js): wallet logic, contract calls, game state, and UI
+- [src/App.css](src/App.css): dark theme styling
+- [src/App.test.js](src/App.test.js): basic render and saved-game tests
+- [package.json](package.json): scripts and dependencies
 
-### `npm run build`
+## Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Install dependencies:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Start the development server:
 
-### `npm run eject`
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+By default the app opens at:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```text
+http://localhost:3000
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+If port 3000 is busy, use another port:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+set PORT=3005&&npm start
+```
 
-## Learn More
+Then open:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```text
+http://localhost:3005
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Testing the Game
 
-### Code Splitting
+Use two different MetaMask accounts on Sepolia. Both accounts need Sepolia ETH.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Connect account 1.
+2. Choose Rock, Paper, or Scissors.
+3. Enter a secret phrase. Save or remember it.
+4. Set a bet amount.
+5. Click `Create Game`.
+6. Copy the game ID.
+7. Click `Logout` or switch MetaMask to account 2.
+8. Connect account 2.
+9. Choose a move and enter a secret phrase.
+10. Confirm the saved game ID is in the join field.
+11. Click `Join Game`.
+12. Click `Reveal Move` with account 2.
+13. Log out or switch back to account 1.
+14. Click `Load Game` if the app does not auto-load it.
+15. Click `Reveal Move` with account 1.
+16. The contract resolves the winner or refunds on a draw.
 
-### Analyzing the Bundle Size
+## Important Behavior
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Game IDs are simple numbers. If the copied ID is `1`, that is normal: it means contract game number 1.
 
-### Making a Progressive Web App
+`Failed to join game: execution reverted: "Not open"` means the game cannot accept another player. This usually happens when:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- player 2 already joined
+- the game was cancelled
+- the game was resolved
+- you are clicking `Join Game` when you should click `Load Game`
 
-### Advanced Configuration
+After a game has two players, use `Load Game` to resume it and `Reveal Move` to continue. Do not click `Join Game` again for that same game.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Logout Notes
 
-### Deployment
+The `Logout` button clears the app's local wallet state and tries to revoke MetaMask account permission with `wallet_revokePermissions`. Some wallets may ignore that method. Even then, the app still returns to the disconnected screen.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Logout keeps the saved game ID so it is easier to reconnect with the next account and continue testing.
 
-### `npm run build` fails to minify
+## Verify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Run a production build:
+
+```bash
+npm run build
+```
+
+Run tests once:
+
+```bash
+npx react-scripts test --watchAll=false --runInBand
+```
