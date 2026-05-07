@@ -947,13 +947,38 @@ function App() {
       <main className="main">
         {!isConnected ? (
           <section className="connect-prompt">
-            <div className="prompt-art" aria-hidden="true">
-              <span>✊</span>
-              <span>✋</span>
-              <span>✌️</span>
+            <div className="logo-icon-large">✊</div>
+            <h2>ChainRPS</h2>
+            <p>
+              Decentralized Rock Paper Scissors on Ethereum Sepolia.
+              Commit your move privately, reveal to win ETH.
+            </p>
+
+            <div className="features">
+              <div className="feature-card">
+                <div className="feature-icon">🔒</div>
+                <div className="feature-title">Commit-Reveal</div>
+                <div className="feature-desc">Cryptographic proof prevents cheating</div>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon">💰</div>
+                <div className="feature-title">Bet & Win</div>
+                <div className="feature-desc">Stake ETH, winner takes the pot</div>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon">⛓️</div>
+                <div className="feature-title">Fully On-Chain</div>
+                <div className="feature-desc">No server, no admin, pure smart contract</div>
+              </div>
             </div>
-            <h2>Rock Paper Scissors on Sepolia</h2>
-            <p>Commit your move, reveal it after both players join, and settle the pot on-chain.</p>
+
+            <button className="connect-btn large" type="button" onClick={connectWallet} disabled={loading}>
+              {loading ? 'Connecting...' : 'Connect MetaMask'}
+            </button>
+
+            <div className="network-badge-landing">
+              ⚡ Sepolia Testnet
+            </div>
             {joinGameId && (
               <section className="game-strip saved-game">
                 <div>
@@ -965,9 +990,6 @@ function App() {
                 </button>
               </section>
             )}
-            <button className="connect-btn large" type="button" onClick={connectWallet} disabled={loading}>
-              {loading ? 'Connecting...' : 'Connect MetaMask'}
-            </button>
             {error && <div className="alert error">{error}</div>}
             {success && <div className="alert success">{success}</div>}
           </section>

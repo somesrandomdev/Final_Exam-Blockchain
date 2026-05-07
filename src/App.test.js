@@ -7,7 +7,8 @@ beforeEach(() => {
 
 test('renders ChainRPS connect prompt', () => {
   render(<App />);
-  expect(screen.getByText(/ChainRPS/i)).toBeInTheDocument();
+  expect(screen.getByText(/Decentralized Rock Paper Scissors/)).toBeInTheDocument();
+  expect(screen.getByText('Commit-Reveal')).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: /Connect MetaMask/i })).toHaveLength(2);
 });
 
