@@ -31,6 +31,9 @@ The ABI used by the frontend is defined directly in [src/App.js](src/App.js).
 - [src/App.js](src/App.js): wallet logic, contract calls, game state, and UI
 - [src/App.css](src/App.css): dark theme styling
 - [src/App.test.js](src/App.test.js): basic render and saved-game tests
+- [contracts/RockPaperScissors.sol](contracts/RockPaperScissors.sol): commit-reveal game contract
+- [test/RockPaperScissors.test.js](test/RockPaperScissors.test.js): Hardhat unit tests for the contract
+- [hardhat.config.js](hardhat.config.js): local Hardhat test configuration
 - [package.json](package.json): scripts and dependencies
 
 ## Setup
@@ -117,4 +120,10 @@ Run tests once:
 
 ```bash
 npx react-scripts test --watchAll=false --runInBand
+```
+
+Run the smart contract unit tests:
+
+```bash
+npm run test:hardhat
 ```

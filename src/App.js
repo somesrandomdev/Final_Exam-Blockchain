@@ -375,11 +375,11 @@ function App() {
         try {
           return await contract.getCommitHash(move, phrase);
         } catch {
-          // The local fallback mirrors Solidity's keccak256(abi.encodePacked(...)).
+          // The local fallback mirrors Solidity's keccak256(abi.encode(...)).
         }
       }
 
-      return ethers.solidityPackedKeccak256(['uint8', 'string'], [Number(move), phrase]);
+      return ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(['uint8', 'string'], [Number(move), phrase]));
     },
     [contract]
   );
